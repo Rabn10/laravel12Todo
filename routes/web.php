@@ -14,6 +14,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 });
 
+Route::get('dashboard', [TaskController::class, 'index'])->middleware('auth')->name('dashboard');
+Route::put('/tasks/completed/{task}', [TaskController::class, 'complete'])->middleware('auth');
 Route::resource('tasks', TaskController::class)->middleware('auth');
 
 require __DIR__.'/settings.php';

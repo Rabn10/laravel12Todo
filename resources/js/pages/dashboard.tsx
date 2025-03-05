@@ -1,38 +1,62 @@
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link } from '@inertiajs/react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Dashboard',
-        href: '/dashboard',
+        title: 'Tasks',
+        href: '/tasks',
     },
 ];
 
-export default function Dashboard() {
+export default function Dashboard({ tasks }: any) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Dashboard" />
-            <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <div className="border-sidebar-border/70 dark:border-sidebar-border relative aspect-video overflow-hidden rounded-xl border">
-                        <button className='absolute inset-0 flex items-center justify-center w-full h-full
-                        bg-neutral-900/20 dark:bg-neutral-100/20 text-neutral-900/20 dark:text-neutral-100/20'>
-                            <Link href="/tasks">Tasks</Link>
-                        </button>
-                    </div>
-                    <div className="border-sidebar-border/70 dark:border-sidebar-border relative aspect-video overflow-hidden rounded-xl border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                    <div className="border-sidebar-border/70 dark:border-sidebar-border relative aspect-video overflow-hidden rounded-xl border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
+            <Head title="Tasks" />
+            <div className="container ms-auto p-4">
+                <div className='flex justify-between items-center mb-4'>
+                    <h1 className='text-2xl font-bold'>Tasks</h1>
+                    <Link href='/tasks/create' className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Create Task</Link>
                 </div>
-                <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border md:min-h-min">
-                    <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+                <div className='overflow-x-auto'>
+                    <table className='w-full table-auto shadow-lg bg-white dark:bg-neutral-800 rounded-lg'> 
+                        <thead>
+                            <tr>
+                                <th className='px-4 py-2 text-left'>SN</th>
+                                <th className='px-4 py-2 text-left'>Title</th>
+                                <th className='px-4 py-2 text-left'>Description</th>
+                                <th className='px-4 py-2 text-left'>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {tasks.map((task : any, index:number ) => (
+                                <tr key={task.id}>
+                                    <td className='border px-4 py-2'>{index + 1}</td>
+                                    <td className='border px-4 py-2'>{task.title}</td>
+                                    <td className='border px-4 py-2'>{task.description}</td>
+                                    <td className='border px-4 py-2'>
+                                        <Link href={`/tasks/${task.id}/edit`} className='cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded'>Edit</Link>
+                                        <Link
+                                            href={`/tasks/${task.id}`}
+                                            method='delete' 
+                                            as='button' 
+                                            onClick={(e) => {
+                                                if (!confirm('Are you sure you want to delete this task?')) {
+                                                    e.preventDefault();
+                                                }
+                                            }} 
+                                            className=' cursor-pointer bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded ml-2'
+                                        >Delete</Link>
+                                        <input type="checkbox" className="ml-2 w-5 h-5" />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
-            </div>
+            </div>  
+
+
         </AppLayout>
     );
 }

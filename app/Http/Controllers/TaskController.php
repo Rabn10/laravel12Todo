@@ -9,8 +9,10 @@ use Inertia\Inertia;
 class TaskController extends Controller
 {
     public function index() {
-        return Inertia::render('tasks/index', [
-            'tasks' => Task::with('user')->get(),
+
+        $user = auth()->user()->id;
+        return Inertia::render('dashboard', [
+            'tasks' => Task::where('user_id', $user)->get(),
         ]);
     }
 
@@ -31,7 +33,7 @@ class TaskController extends Controller
             'user_id' => auth()->id(),
         ]);
 
-        return redirect()->route('tasks.index');
+        return redirect()->route('dashboard');
     }
 
     public function edit(Task $task) {
@@ -48,12 +50,21 @@ class TaskController extends Controller
 
         $task->update($request->all());
 
-        return redirect()->route('tasks.index');
+        return redirect()->route('dashboard');
     }
 
     public function destroy(Task $task) {
         $task->delete();
 
-        return redirect()->route('tasks.index');
+        return redirect()->route('dashboard');
+    }
+
+    public function complete(Task $task) {
+        $task->update([
+            'completed' => true,
+        ]);
+        return response()->json($task);
+
+        // return redirect()->route('dashboard');
     }
 }
