@@ -9,7 +9,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Dashboard() {
+export default function Dashboard({ tasks }: any) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Tasks" />
@@ -29,15 +29,27 @@ export default function Dashboard() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td className='border px-4 py-2'>1</td>
-                                <td className='border px-4 py-2'>Task 1</td>
-                                <td className='border px-4 py-2'>This is task 1</td>
-                                <td className='border px-4 py-2'>
-                                    <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>Edit</button>
-                                    <button className='bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded'>Delete</button>
-                                </td>
-                            </tr>
+                            {tasks.map((task : any ) => (
+                                <tr key={task.id}>
+                                    <td className='border px-4 py-2'>{task.id}</td>
+                                    <td className='border px-4 py-2'>{task.title}</td>
+                                    <td className='border px-4 py-2'>{task.description}</td>
+                                    <td className='border px-4 py-2'>
+                                        <Link href={`/tasks/${task.id}/edit`} className='cursor-pointer bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded'>Edit</Link>
+                                        <Link
+                                            href={`/tasks/${task.id}`}
+                                            method='delete' 
+                                            as='button' 
+                                            onClick={(e) => {
+                                                if (!confirm('Are you sure you want to delete this task?')) {
+                                                    e.preventDefault();
+                                                }
+                                            }} 
+                                            className=' cursor-pointer bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded ml-2'
+                                        >Delete</Link>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>
